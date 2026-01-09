@@ -36,20 +36,27 @@ public:
     UPROPERTY(EditAnywhere, Category = "AR Setup")
     TSubclassOf<AActor> GhostBuildingClass;
 
-    // Fonction pour confirmer le placement (clic de souris)
+    UPROPERTY(EditAnywhere, Category = "AR Grid")
+    float TileSize = 5.0f; // Taille d'un carré sur ta map (en cm)
+
+    UPROPERTY(EditAnywhere, Category = "AR Grid")
+    FVector2D MapSize = FVector2D(80.0f, 50.0f); // Dimensions réelles
+
     UFUNCTION(BlueprintCallable, Category = "AR Interaction")
     void ConfirmPlacement();
 
 private:
-    // Pointeur vers le bâtiment généré
     AActor* SpawnedBuilding;
-
-    // Fonction pour gérer le tracking de l'image
-    void UpdateImageTracking();
-
-    // Pointeur vers le bâtiment fantôme actuellement dans la scène
     AActor* CurrentGhostBuilding;
 
-    // La fonction qui va calculer le rayon (Raycast)
+    // Référence à l'image physique détectée
+    UARTrackedImage* DetectedMapImage;
+
+    // Stockage de la position de la tuile survolée
+    int32 CurrentCol;
+    int32 CurrentRow;
+
+    void UpdateImageTracking();
     void HandleHoverLogic();
+
 };
