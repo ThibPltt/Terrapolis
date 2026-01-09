@@ -123,6 +123,6 @@ void AARManager::ConfirmPlacement()
     if (CurrentGhostBuilding && !CurrentGhostBuilding->IsHidden())
     {
         GetWorld()->SpawnActor<AActor>(BuildingClass, CurrentGhostBuilding->GetActorLocation(), CurrentGhostBuilding->GetActorRotation());
-        UE_LOG(LogTemp, Warning, TEXT("Placement Validé - Tuile: [%d, %d]"), CurrentCol, CurrentRow);
+        UE_LOG(LogTemp, Warning, TEXT("Placement Valide - Tuile: [%d, %d]"), CurrentCol, CurrentRow);
     }
 }
