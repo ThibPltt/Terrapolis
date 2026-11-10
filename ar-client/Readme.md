@@ -10,7 +10,7 @@ Ce projet est le **Client Mobile** développé sous **Unity 2022.3.37f1**. Il pe
 ## Dépôt Serveur (Python)
 
 Le backend (génération de la carte, logique serveur UDP) :
-**[\[Repo Moteur de jeu ici\]](https://github.com/Lecureur-Arthur/Terrapolis_Python)**
+**[\[Dossier engine (moteur de jeu)\]](../engine)**
 
 **Assurez-vous de cloner et de lancer le script Python sur votre PC avant de tester l'application Unity.**
 

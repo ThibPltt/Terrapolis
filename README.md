@@ -20,7 +20,7 @@ Environmental and anthropological simulation in AR, driven by Deep Reinforcement
 | **Dates** | 2025 – 2026 |
 | **Context** | augmented reality · project lead, team of 3 · ENSIM |
 | **Technologies** | AR · Deep Reinforcement Learning · Unity · Python |
-| **Code** | [Terrapolis_Python](https://github.com/Lecureur-Arthur/Terrapolis_Python) (engine and AI) · [Terrapolis_Unity](https://github.com/Lecureur-Arthur/Terrapolis_Unity) (AR client) |
+| **Code** | [`engine/`](engine) (Python engine and AI) · [`ai-training/`](ai-training) (training and evaluation) · [`ar-client/`](ar-client) (Unity AR client) |
 | **Case study** | [thibautplatet.com/en/projects/terrapolis.html](https://thibautplatet.com/en/projects/terrapolis.html) |
 
 ## Problem
@@ -108,6 +108,41 @@ Worst and average scores: 1,000 test games. Best score of the AI: its best game 
 
 <img src="docs/media/training-curves.webp" width="100%" alt="TensorBoard curves of the average score over 1,500 episodes for three training configurations, compared with a random agent.">
 <sub>Average score (over 100 episodes) during the final training run of 1,500 episodes, tracked with TensorBoard. In green, the configuration that was kept (with a dropout of 0.3) ends around 100,600; at the bottom, the random agent stays around 12,400.</sub>
+
+## In this repository
+
+| Folder | Content |
+|---|---|
+| [`engine/`](engine) | Python engine (Pygame): game logic, UDP server for the AR app (port 5005), the CityCNN model (`terrapolis_models.py`) and its trained checkpoints (`save_terrapolis_models/`). |
+| [`ai-training/`](ai-training) | AI work: `terrapolis_train.py` trains CityCNN (1,500 episodes), `terrapolis_visu.py` replays a game played by the trained model, `terrapolis_benchmark.py` and `runPurementAleatoire.py` run the random baselines; training logs and TensorBoard runs. |
+| [`ar-client/`](ar-client) | Unity 2022.3.37f1 project for Android (AR Foundation): main menu, AR scene, 2D view, UDP client. |
+
+The three folders keep the full history of the team's original repositories, [Terrapolis_Python](https://github.com/Lecureur-Arthur/Terrapolis_Python) and [Terrapolis_Unity](https://github.com/Lecureur-Arthur/Terrapolis_Unity). Each one has its own README, in French.
+
+## Run it
+
+Engine (Python 3.10 or later):
+
+```bash
+conda create -n terrapolis_env python=3.12.7
+conda activate terrapolis_env
+conda install pytorch torchvision -c pytorch
+pip install pygame numpy tqdm tensorboard
+
+cd engine
+python main.py    # local window + UDP server on port 5005
+```
+
+AR client: open `ar-client/` with Unity 2022.3.37f1 (Android Build Support, AR Foundation) and build it on an Android phone connected to the same Wi-Fi as the PC running the engine. In the app, scan a horizontal surface (floor or table), then the QR code to load the map.
+
+AI training and evaluation:
+
+```bash
+cd ai-training
+python terrapolis_train.py       # train CityCNN
+python terrapolis_visu.py        # watch the trained model play a game
+python terrapolis_benchmark.py   # random strategy over 1,000 games
+```
 
 ## Team
 
