@@ -127,7 +127,7 @@ A possible improvement: starting from satellite scans of real cities or environm
 | [`ai-training/`](ai-training) | AI work: `terrapolis_train.py` trains CityCNN (1,500 episodes), `terrapolis_visu.py` replays a game played by the trained model, `terrapolis_benchmark.py` and `runPurementAleatoire.py` run the random baselines; training logs and TensorBoard runs. |
 | [`ar-client/`](ar-client) | Unity 2022.3.37f1 project for Android (AR Foundation): main menu, AR scene, 2D view, UDP client. |
 
-The three folders keep the full history of the team's original repositories, [Terrapolis_Python](https://github.com/Lecureur-Arthur/Terrapolis_Python) and [Terrapolis_Unity](https://github.com/Lecureur-Arthur/Terrapolis_Unity). Each one has its own README, in French.
+The three folders keep the full history of the team's original repositories, [Terrapolis_Python](https://github.com/Lecureur-Arthur/Terrapolis_Python) and [Terrapolis_Unity](https://github.com/Lecureur-Arthur/Terrapolis_Unity). Each one keeps its original README, in French, renamed `Historic_README.md` ([engine](engine/Historic_README.md), [ar-client](ar-client/Historic_README.md)).
 
 ## Run it
 
