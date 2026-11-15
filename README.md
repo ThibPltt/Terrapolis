@@ -66,6 +66,10 @@ flowchart LR
     B --> A
 ```
 
+<img src="docs/media/devices.webp" width="100%" alt="Diagram of three devices, labelled in French: the computer projects the map onto the table through a projector, the tablet detects that surface in augmented reality, and the computer and the tablet communicate over UDP.">
+
+<sub>The three devices: the computer projects the map, the tablet recognises it in augmented reality, and both exchange over UDP (diagram in French).</sub>
+
 <table>
   <tr>
     <td width="33%"><img src="docs/media/app-2d.webp" width="100%" alt="On the tablet: the 2D view and the menu of the six buildings to place."></td>
@@ -78,6 +82,10 @@ flowchart LR
     <td><sub>On the computer: the map, the moves the AI evaluates at each turn and the log of its actions (interface in French).</sub></td>
   </tr>
 </table>
+
+<img src="docs/media/image-tracking.webp" width="100%" alt="Close-up of the tablet held above the projected map: on the chosen tile, a building appears in 3D.">
+
+<sub>In augmented reality, a placed building appears in 3D at its place on the map (image tracking).</sub>
 
 ## The artificial intelligence
 
@@ -108,6 +116,8 @@ Worst and average scores: 1,000 test games. Best score of the AI: its best game 
 
 <img src="docs/media/training-curves.webp" width="100%" alt="TensorBoard curves of the average score over 1,500 episodes for three training configurations, compared with a random agent.">
 <sub>Average score (over 100 episodes) during the final training run of 1,500 episodes, tracked with TensorBoard. In green, the configuration that was kept (with a dropout of 0.3) ends around 100,600; at the bottom, the random agent stays around 12,400.</sub>
+
+A possible improvement: starting from satellite scans of real cities or environments, to predict their future problems.
 
 ## In this repository
 
