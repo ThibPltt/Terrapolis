@@ -156,3 +156,18 @@ python terrapolis_benchmark.py   # random strategy over 1,000 games
 ## Team
 
 Arthur Lecureur (engine and logic, AR client), Clara Tournay (AR client), Thibaut Platet (AI and data, project lead).
+
+## Licence
+
+The code and the original content of this repository are released under the [MIT licence](LICENSE); each team member keeps the copyright on their own contributions.
+
+### Third-party assets
+
+The packages below, used by the AR client, are **not** covered by the MIT licence and stay under their publishers’ terms. To reuse them, get them from their store page.
+
+| Folder | Asset | Source | Licence |
+|---|---|---|---|
+| `ar-client/Assets/Package_Assets/ElectricWire` | ElectricWire — burnydev | Unity Asset Store | [Asset Store EULA](https://unity.com/legal/as-terms) |
+| `ar-client/Assets/Package_Assets/Buildings`<br>`ar-client/Assets/Package_Assets/Modern Building Set` | Low-poly building models | Unity Asset Store | Asset Store EULA |
+| `ar-client/Assets/Thaleah_PixelFont` | [Free Pixel Font – Thaleah](https://assetstore.unity.com/packages/slug/140059) — Rick Hoppmann (Tiny Worlds) | Unity Asset Store / itch.io | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
+| `ar-client/Assets/TextMesh Pro` | TextMesh Pro — Unity | Unity package | Unity Companion Licence |
