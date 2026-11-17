@@ -20,8 +20,9 @@ Environmental and anthropological simulation in AR, driven by Deep Reinforcement
 | **Dates** | 2025 – 2026 |
 | **Context** | augmented reality · project lead, team of 3 · ENSIM |
 | **Technologies** | AR · Deep Reinforcement Learning · Unity · Python |
-| **Code** | [`engine/`](engine) (Python engine and AI) · [`ai-training/`](ai-training) (training and evaluation) · [`ar-client/`](ar-client) (Unity AR client) |
+| **Video** | [Project video](https://www.youtube.com/watch?v=86Q1wE_7Ecg) · [The AI plays a full game](https://www.youtube.com/watch?v=sdau2TpGC24) (YouTube) |
 | **Case study** | [thibautplatet.com/en/projects/terrapolis.html](https://thibautplatet.com/en/projects/terrapolis.html) |
+| **Code** | [`engine/`](engine) (Python engine and AI) · [`ai-training/`](ai-training) (training and evaluation) · [`ar-client/`](ar-client) (Unity AR client) |
 
 ## Problem
 
@@ -171,3 +172,9 @@ The packages below, used by the AR client, are **not** covered by the MIT licenc
 | `ar-client/Assets/Package_Assets/Buildings`<br>`ar-client/Assets/Package_Assets/Modern Building Set` | Low-poly building models | Unity Asset Store | Asset Store EULA |
 | `ar-client/Assets/Thaleah_PixelFont` | [Free Pixel Font – Thaleah](https://assetstore.unity.com/packages/slug/140059) — Rick Hoppmann (Tiny Worlds) | Unity Asset Store / itch.io | [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/) |
 | `ar-client/Assets/TextMesh Pro` | TextMesh Pro — Unity | Unity package | Unity Companion Licence |
+
+<details>
+<summary>🇫🇷 En bref</summary>
+
+Simulation environnementale et anthropologique en réalité augmentée, pilotée par Deep Reinforcement Learning (CNN) : faire comprendre les conséquences d’un choix d’aménagement (pollution, inondations) avant de construire. Moteur et IA en Python (PyTorch), client AR sous Unity. Chef de projet d’une équipe de 3 à l’ENSIM (2025 – 2026). Fiche complète sur [thibautplatet.com](https://thibautplatet.com/projets/terrapolis.html).
+</details>
