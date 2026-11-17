@@ -134,13 +134,11 @@ The three folders keep the full history of the team's original repositories, [Te
 Engine (Python 3.10 or later):
 
 ```bash
-conda create -n terrapolis_env python=3.12.7
-conda activate terrapolis_env
-conda install pytorch torchvision -c pytorch
-pip install pygame numpy tqdm tensorboard
-
 cd engine
-python main.py    # local window + UDP server on port 5005
+python -m venv .venv
+.venv\Scripts\activate          # Windows (macOS / Linux: source .venv/bin/activate)
+pip install -r requirements.txt   # numpy, torch, pygame, tqdm, tensorboard
+python main.py                    # local window + UDP server on port 5005
 ```
 
 AR client: open `ar-client/` with Unity 2022.3.37f1 (Android Build Support, AR Foundation) and build it on an Android phone connected to the same Wi-Fi as the PC running the engine. In the app, scan a horizontal surface (floor or table), then the QR code to load the map.
@@ -149,6 +147,7 @@ AI training and evaluation:
 
 ```bash
 cd ai-training
+pip install -r requirements.txt  # same list as the engine
 python terrapolis_train.py       # train CityCNN
 python terrapolis_visu.py        # watch the trained model play a game
 python terrapolis_benchmark.py   # random strategy over 1,000 games

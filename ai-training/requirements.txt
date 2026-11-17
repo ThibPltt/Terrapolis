@@ -1,0 +1,6 @@
+# Python 3.10 or later (developed with 3.12)
+numpy>=1.26
+torch>=2.2
+pygame>=2.5
+tqdm>=4.66
+tensorboard>=2.15
