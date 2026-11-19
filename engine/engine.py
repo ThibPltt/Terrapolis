@@ -42,8 +42,11 @@ class Game:
 
     def _init_display(self):
         # La taille de l'écran est maintenant la somme de la bande AR + la carte + le menu
-        self.screen = pygame.display.set_mode((cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT))
-        pygame.display.set_caption("City Builder - Terrapolis AR")
+        # SCALED + RESIZABLE : le jeu garde sa résolution (bande AR + carte + menu), mais la fenêtre
+        # peut être agrandie (bord, bouton Agrandir, F11 pour le plein écran) sans déformer l'image.
+        # Les clics restent en coordonnées du jeu, pygame fait la conversion.
+        self.screen = pygame.display.set_mode((cfg.SCREEN_WIDTH, cfg.SCREEN_HEIGHT), pygame.SCALED | pygame.RESIZABLE)
+        pygame.display.set_caption("City Builder - Terrapolis AR  (F11 : plein écran)")
         self.clock = pygame.time.Clock()
 
         # On prépare l'image de la bande latérale AR
@@ -1468,6 +1471,11 @@ class Game:
                 if event.type == pygame.QUIT: running = False
                 elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                     self._handle_click(event.pos)
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_F11:
+                    try:
+                        pygame.display.toggle_fullscreen()
+                    except pygame.error as e:
+                        print(f"Plein écran indisponible : {e}")
             self.update_game_logic(dt)
             self.draw()
             pygame.display.flip()
