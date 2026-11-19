@@ -106,6 +106,7 @@ public class UDP_generationMap : MonoBehaviour
         mapContainer = new GameObject("MapContainer");
         mapContainer.transform.SetParent(currentAnchor.transform, false);
 
+        if (instructionText != null) instructionText.text = "QR code détecté ! Connexion au moteur Python...";
         StartCoroutine(RequestMap());
         isMapped = true;
     }
