@@ -2,6 +2,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Collections; // IEnumerator (coroutine RequestMap)
 using System.Collections.Generic; // Important pour Queue
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
@@ -12,7 +13,10 @@ using UnityEngine.EventSystems;
 public class UDP_generationMap : MonoBehaviour
 {
     [Header("Réseau UDP")]
-    public string pythonIP = "10.110.215.104"; 
+    [Tooltip("Coché : l'app trouve toute seule le PC qui lance le moteur Python sur le même Wi-Fi (broadcast). Décoché : elle utilise Python IP.")]
+    public bool autoDetectPC = true;
+    [Tooltip("Adresse IPv4 du PC (ipconfig). Utilisée seulement si Auto Detect PC est décoché.")]
+    public string pythonIP = "10.110.215.104";
     public int pythonPort = 5005;
     public int unityPort = 5006;
 
@@ -48,6 +52,8 @@ public class UDP_generationMap : MonoBehaviour
 
     // Variables internes
     private UdpClient udpClient;
+    private volatile bool serverReplied = false; // vrai dès le premier message reçu du moteur Python
+    private List<IPAddress> broadcastTargets = new List<IPAddress> { IPAddress.Broadcast };
     private ARAnchor currentAnchor;
     private GameObject mapContainer;
     private bool isMapped = false;
@@ -70,6 +76,7 @@ public class UDP_generationMap : MonoBehaviour
         
         try {
             udpClient = new UdpClient(unityPort);
+            udpClient.EnableBroadcast = true;
             udpClient.BeginReceive(new AsyncCallback(OnReceiveUDP), null);
         } catch (Exception e) { Debug.LogError("Erreur UDP: " + e.Message); }
     }
@@ -99,8 +106,51 @@ public class UDP_generationMap : MonoBehaviour
         mapContainer = new GameObject("MapContainer");
         mapContainer.transform.SetParent(currentAnchor.transform, false);
 
-        SendData("GET_MAP");
+        StartCoroutine(RequestMap());
         isMapped = true;
+    }
+
+    // Demande la carte au moteur Python, puis la redemande chaque seconde tant qu'il n'a pas répondu :
+    // un paquet UDP perdu ne bloque plus la partie (un broadcast Wi-Fi n'est jamais renvoyé par le réseau).
+    IEnumerator RequestMap() {
+        int attempts = 0;
+        do {
+            if (autoDetectPC && !serverReplied) broadcastTargets = GetBroadcastTargets();
+            SendData("GET_MAP");
+            attempts++;
+            if (attempts == 3 && !serverReplied && instructionText != null) {
+                instructionText.text = autoDetectPC
+                    ? "Recherche du PC... Lancez le moteur Python sur le même Wi-Fi."
+                    : "Pas de réponse de " + pythonIP + " : vérifiez l'IP du PC et le Wi-Fi.";
+            }
+            yield return new WaitForSeconds(1f);
+        } while (!serverReplied);
+    }
+
+    // 255.255.255.255 + l'adresse de broadcast de chaque réseau IPv4 actif (ex. 192.168.1.255),
+    // pour que la demande passe par le Wi-Fi même quand les données mobiles sont la route par défaut.
+    List<IPAddress> GetBroadcastTargets() {
+        var targets = new List<IPAddress> { IPAddress.Broadcast };
+        try {
+            foreach (var nic in System.Net.NetworkInformation.NetworkInterface.GetAllNetworkInterfaces()) {
+                if (nic.OperationalStatus == System.Net.NetworkInformation.OperationalStatus.Down) continue;
+                foreach (var info in nic.GetIPProperties().UnicastAddresses) {
+                    IPAddress address = info.Address;
+                    if (address.AddressFamily != AddressFamily.InterNetwork || IPAddress.IsLoopback(address)) continue;
+                    if (info.IPv4Mask == null) continue;
+                    byte[] ipBytes = address.GetAddressBytes();
+                    byte[] maskBytes = info.IPv4Mask.GetAddressBytes();
+                    if (ipBytes.Length != 4 || maskBytes.Length != 4) continue;
+                    byte[] broadcastBytes = new byte[4];
+                    for (int i = 0; i < 4; i++) broadcastBytes[i] = (byte)(ipBytes[i] | ~maskBytes[i]);
+                    IPAddress target = new IPAddress(broadcastBytes);
+                    if (!target.Equals(address) && !targets.Contains(target)) targets.Add(target);
+                }
+            }
+        } catch (Exception e) {
+            Debug.LogWarning("Réseaux locaux illisibles, broadcast général seulement : " + e.Message);
+        }
+        return targets;
     }
 
     void Update() {
@@ -256,7 +306,10 @@ public class UDP_generationMap : MonoBehaviour
 
     void SpawnMap(string data) {
         Debug.Log(data);
-        
+
+        // Carte reçue avant le scan du QR code (ex. après un retour au menu) : pas encore d'ancre, on l'ignore
+        if (mapContainer == null) return;
+
         // --- SECURITE CRITIQUE : Nettoyage des données ---
         // On enlève les crochets python [], les espaces et les sauts de ligne
         string cleanData = data.Replace("[", "").Replace("]", "").Replace("\n", "").Replace("\r", "").Replace(" ", "").Replace("|", "");
@@ -326,7 +379,15 @@ public class UDP_generationMap : MonoBehaviour
     void SendData(string msg) {
         try {
             byte[] data = Encoding.UTF8.GetBytes(msg);
-            udpClient.Send(data, data.Length, pythonIP, pythonPort);
+            if (autoDetectPC && !serverReplied) {
+                // PC pas encore trouvé : on envoie à tout le Wi-Fi, le moteur répond et on retient son adresse
+                foreach (IPAddress target in broadcastTargets) {
+                    try { udpClient.Send(data, data.Length, new IPEndPoint(target, pythonPort)); }
+                    catch (Exception e) { Debug.LogWarning("Broadcast UDP vers " + target + " : " + e.Message); }
+                }
+            } else {
+                udpClient.Send(data, data.Length, pythonIP, pythonPort);
+            }
         } catch (Exception e) { Debug.LogError("Send UDP Error: " + e.Message); }
     }
 
@@ -334,6 +395,10 @@ public class UDP_generationMap : MonoBehaviour
         try {
             IPEndPoint ip = new IPEndPoint(IPAddress.Any, unityPort);
             byte[] bytes = udpClient.EndReceive(ar, ref ip);
+            if (!serverReplied) {
+                if (autoDetectPC) pythonIP = ip.Address.ToString(); // adresse du PC qui a répondu
+                serverReplied = true;
+            }
             string msg = Encoding.UTF8.GetString(bytes);
 
             // ON STOCKE DANS LA FILE D'ATTENTE (Thread Safe)
