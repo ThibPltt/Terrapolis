@@ -20,6 +20,7 @@ Environmental and anthropological simulation in AR, driven by Deep Reinforcement
 | **Dates** | 2025 – 2026 |
 | **Context** | augmented reality · project lead, team of 3 · ENSIM |
 | **Technologies** | AR · Deep Reinforcement Learning · Unity · Python |
+| **Play it** | [v1.0 Android APK](https://github.com/ThibPltt/Terrapolis/releases/latest) (AR client, ARCore device) with the Python engine on a PC, see [Run it](#run-it) |
 | **Video** | [Project video](https://www.youtube.com/watch?v=86Q1wE_7Ecg) · [The AI plays a full game](https://www.youtube.com/watch?v=sdau2TpGC24) (YouTube) |
 | **Case study** | [thibautplatet.com/en/projects/terrapolis.html](https://thibautplatet.com/en/projects/terrapolis.html) |
 | **Code** | [`engine/`](engine) (Python engine and AI) · [`ai-training/`](ai-training) (training and evaluation) · [`ar-client/`](ar-client) (Unity AR client) |
@@ -126,23 +127,27 @@ A possible improvement: starting from satellite scans of real cities or environm
 |---|---|
 | [`engine/`](engine) | Python engine (Pygame): game logic, UDP server for the AR app (port 5005), the CityCNN model (`terrapolis_models.py`) and its trained checkpoints (`save_terrapolis_models/`). |
 | [`ai-training/`](ai-training) | AI work: `terrapolis_train.py` trains CityCNN (1,500 episodes), `terrapolis_visu.py` replays a game played by the trained model, `terrapolis_benchmark.py` and `runPurementAleatoire.py` run the random baselines; training logs and TensorBoard runs. |
-| [`ar-client/`](ar-client) | Unity 2022.3.37f1 project for Android (AR Foundation): main menu, AR scene, 2D view, UDP client. |
+| [`ar-client/`](ar-client) | Unity 2022.3.62f3 project for Android (AR Foundation): main menu, AR scene, 2D view, UDP client. |
 
 The three folders keep the full history of the team's original repositories, [Terrapolis_Python](https://github.com/Lecureur-Arthur/Terrapolis_Python) and [Terrapolis_Unity](https://github.com/Lecureur-Arthur/Terrapolis_Unity). Each one keeps its original README, in French, renamed `Historic_README.md` ([engine](engine/Historic_README.md), [ar-client](ar-client/Historic_README.md)).
 
 ## Run it
 
-Engine (Python 3.10 or later):
+A game needs two devices on the same Wi-Fi network: a PC running the Python engine, and an Android phone or tablet running the AR client.
+
+Engine (Python 3.10 or later), from the `engine` folder (the `main.py` in `ai-training` is the training copy and does not answer the AR app):
 
 ```bash
 cd engine
 python -m venv .venv
 .venv\Scripts\activate          # Windows (macOS / Linux: source .venv/bin/activate)
 pip install -r requirements.txt   # numpy, torch, pygame, tqdm, tensorboard
-python main.py                    # local window + UDP server on port 5005
+python main.py                    # game window + UDP server on port 5005 (F11: full screen)
 ```
 
-AR client: open `ar-client/` with Unity 2022.3.37f1 (Android Build Support, AR Foundation) and build it on an Android phone connected to the same Wi-Fi as the PC running the engine. In the app, scan a horizontal surface (floor or table), then the QR code to load the map.
+- **AR client on a phone or tablet:** download `TerraPolis-v1.0.apk` from the [latest release](https://github.com/ThibPltt/Terrapolis/releases/latest) and install it on an Android device that supports ARCore (allow installs from unknown sources). Connect it to the same Wi-Fi as the PC, not to mobile data: the app finds the PC by itself. On Windows, allow Python on private networks when the firewall asks.
+- **Play:** project the engine window onto a table, scan the table with the app, then aim at the AR band on the left of the window to load the map. The AR map is drawn at projection size (about 1 m wide), so a projector works best; on a laptop screen, hold the device close to the band.
+- **From the source:** open `ar-client/` with Unity **2022.3.62f3** (Android Build Support), switch the platform to Android in *File › Build Settings*, then *Build And Run* with the device connected over USB (developer mode enabled). Android settings: IL2CPP, ARM64, OpenGLES3, minimum API level 24, Google ARCore as the only XR provider. On a network that blocks broadcast, untick *Auto Detect PC* on the *AR Session* object of the `GamePlayAR` scene and enter the PC's IPv4 address in *Python IP*.
 
 AI training and evaluation:
 
@@ -176,5 +181,5 @@ The packages below, used by the AR client, are **not** covered by the MIT licenc
 <details>
 <summary>🇫🇷 En bref</summary>
 
-Simulation environnementale et anthropologique en réalité augmentée, pilotée par Deep Reinforcement Learning (CNN) : faire comprendre les conséquences d’un choix d’aménagement (pollution, inondations) avant de construire. Moteur et IA en Python (PyTorch), client AR sous Unity. Chef de projet d’une équipe de 3 à l’ENSIM (2025 – 2026). Fiche complète sur [thibautplatet.com](https://thibautplatet.com/projets/terrapolis.html).
+Simulation environnementale et anthropologique en réalité augmentée, pilotée par Deep Reinforcement Learning (CNN) : faire comprendre les conséquences d’un choix d’aménagement (pollution, inondations) avant de construire. Moteur et IA en Python (PyTorch), client AR sous Unity. Chef de projet d’une équipe de 3 à l’ENSIM (2025 – 2026). APK Android du client AR dans les [Releases](https://github.com/ThibPltt/Terrapolis/releases/latest), à utiliser avec le moteur Python lancé sur un PC du même réseau Wi-Fi. Fiche complète sur [thibautplatet.com](https://thibautplatet.com/projets/terrapolis.html).
 </details>
